@@ -1,46 +1,49 @@
+import java.math.BigInteger;
+import java.util.Random;
+
 /**
  * Created by Tudor on 21-Jan-17.
  */
+
 public class Rsa {
-    private long P, Q, E, N, PHI,  D;
+    private BigInteger p;
+    private BigInteger q;
+    private BigInteger N;
+    private BigInteger phi;
+    private BigInteger e;
+    private BigInteger d;
+    private int bitlength = 1024;
+    private Random r;
 
-
-    private static final String NPQ_STRING = "n=p*q=";
-    private static final String PHI_STRING = "Φ=(p-1)*(q-1)=";
-
-
-    public long encrypt(long message) {
-        int i;
-        long mesajCriptat = 1;
-        for (i = 0; i < E; i++)
-            mesajCriptat = mesajCriptat * message % N;
-        mesajCriptat = mesajCriptat % N;
-        return mesajCriptat;
+    public Rsa() {
+        r = new Random();
+        p = BigInteger.probablePrime(bitlength, r);
+        q = BigInteger.probablePrime(bitlength, r);
+        N = p.multiply(q);
+        phi = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
+        e = BigInteger.probablePrime(bitlength / 2, r);
+        while (phi.gcd(e).compareTo(BigInteger.ONE) > 0 && e.compareTo(phi) < 0) {
+            e.add(BigInteger.ONE);
+        }
+        d = e.modInverse(phi);
     }
 
-    int check() {
-        int i;
-        for (i = 3; E % i == 0 && PHI % i == 0; )
-            return 1;
-        return 0;
+    public Rsa(BigInteger e, BigInteger d, BigInteger N) {
+        this.e = e;
+        this.d = d;
+        this.N = N;
     }
 
-    long decrypt(long encrypted) {
-        int i;
-        long mesajCurat = 1;
-        for (i = 0; i < D; i++)
-            mesajCurat = mesajCurat * encrypted % N;
-        mesajCurat = mesajCurat % N;
-        return mesajCurat;
+
+
+    // Encrypt message
+    public byte[] encrypt(byte[] message) {
+        return (new BigInteger(message)).modPow(e, N).toByteArray();
     }
 
-    void genPrivateKey() {
-        long s;
-        D = 1;
-        do {
-            s = (D * E) % PHI;
-            D++;
-        } while (s != 1);
-        D = D - 1;
+    // Decrypt message
+    public byte[] decrypt(byte[] message) {
+        return (new BigInteger(message)).modPow(d, N).toByteArray();
     }
+
 }
