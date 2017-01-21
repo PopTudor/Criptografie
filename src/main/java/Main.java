@@ -2,6 +2,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Random;
+import org.apache.commons.lang.time.*;
 
 /**
  * Created by Tudor on 21-Jan-17.
@@ -11,7 +12,8 @@ public class Main {
 
     @SuppressWarnings("deprecation")
     public static void main(String[] args) throws IOException {
-//        testRsa();
+        testRsa();
+        //StopWatch
         FractiiContinue fractiiContinue = new FractiiContinue(BigInteger.valueOf(10123));
     }
 
