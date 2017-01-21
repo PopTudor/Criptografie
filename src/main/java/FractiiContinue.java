@@ -27,6 +27,7 @@ public class FractiiContinue {
         pasDoi();
         pasTrei();
         pasPatru();
+        pasCinci();
     }
 
     /**
@@ -60,7 +61,7 @@ public class FractiiContinue {
      */
     private void pasTrei() {
         System.out.print("i\t");
-        for (int j = 0; j < i; j++) System.out.printf("%7d ", j);
+        for (int j = 0; j < i; j++) System.out.printf("%9d ", j);
         System.out.println();
         for (int j = 1; j < i; j++) {
             double sqrt = 1.0 / xi[j - 1];
@@ -68,14 +69,17 @@ public class FractiiContinue {
             xi[j] = sqrt - ai[j];
         }
         System.out.printf("ai\t");
-        for (int j = 0; j < i; j++) System.out.printf("%7d ", ai[j]);
+        for (int j = 0; j < i; j++) System.out.printf("%9d ", ai[j]);
         System.out.println();
         System.out.print("xi\t");
-        for (int j = 0; j < i; j++) System.out.printf("%7.3f ", xi[j]);
+        for (int j = 0; j < i; j++) System.out.printf("  %8.3f", xi[j]);
 
         System.out.println();
     }
 
+    /**
+     * Calculeaza bi = a[i]*b[i-1]+b[i-2]
+     */
     private void pasPatru() {
         for (int j = 1; j < i; j++) {
             try {
@@ -83,10 +87,23 @@ public class FractiiContinue {
             } catch (ArrayIndexOutOfBoundsException e) {
                 bi[j] = ai[j] * bi[j - 1] + 1;
             }
+            bi[j] %= n.intValue();
         }
         System.out.print("bi\t");
-        for (int j = 0; j < i; j++) System.out.printf("%8d", bi[j]);
+        for (int j = 0; j < i; j++) System.out.printf("%10d", bi[j]);
+        System.out.println();
     }
 
-
+    /**
+     * Calculeaza bi^2 mod n
+     */
+    private void pasCinci() {
+        for (int j = 0; j < i; j++) {
+            bi_2_mod_n[j] = BigInteger.valueOf(bi[j]).modPow(BigInteger.valueOf(2), n).intValue();
+            if (bi_2_mod_n[j] > 1000)
+                bi_2_mod_n[j] = n.intValue() % bi_2_mod_n[j];
+        }
+        System.out.printf("bi2 mod n");
+        for (int j = 0; j < i; j++) System.out.printf("%6d   ", bi_2_mod_n[j]);
+    }
 }
