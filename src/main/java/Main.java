@@ -17,13 +17,14 @@ public class Main {
         BigInteger p = BigInteger.valueOf(1873);
         BigInteger q = BigInteger.valueOf(2029);
         BigInteger n = p.multiply(q);
-        BigInteger phi = (p.subtract(BigInteger.ONE)).multiply(q.subtract(BigInteger.ONE)); // gcd(12,5)=1
+        BigInteger phi = (p.subtract(BigInteger.ONE)).multiply(q.subtract(BigInteger.ONE));
 
         BigInteger e = BigInteger.probablePrime(32 / 2, random);
         while (phi.gcd(e).compareTo(BigInteger.ONE) > 0 && e.compareTo(phi) < 0) {
             e.add(BigInteger.ONE);
         }
-        BigInteger d = e.modInverse(phi);;
+        BigInteger d = e.modInverse(phi);
+
 
         Rsa rsa = new Rsa(e, d, n);
         String teststring;
