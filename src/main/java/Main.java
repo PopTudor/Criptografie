@@ -11,6 +11,11 @@ public class Main {
 
     @SuppressWarnings("deprecation")
     public static void main(String[] args) throws IOException {
+//        testRsa();
+        FractiiContinue fractiiContinue = new FractiiContinue(BigInteger.valueOf(10123));
+    }
+
+    private static void testRsa() throws IOException {
         Random random = new Random();
         random.ints(0, 100);
         DataInputStream in = new DataInputStream(System.in);
