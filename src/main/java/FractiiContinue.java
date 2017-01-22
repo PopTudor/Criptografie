@@ -213,16 +213,26 @@ public class FractiiContinue {
             List<Integer> integers = new ArrayList<>(i);
             List<Integer> candidatiJ = candidati.get(j);
 
-            for (int k = 0; k < i; k++) {
+            for (int k = 0; k < B.size(); k++) {
                 integers.add(0);
-                if (candidatiJ.contains(B.get(k)))
-                    integers.set(k, 1);
+                if (candidatiJ.contains(B.get(k))) {
+                    integers.set(k, count(candidatiJ, B.get(k)));
+                }
             }
             V.add(integers);
         }
         for (int j = 0; j < V.size(); j++) {
             System.out.printf("v%d = %s\n", j, V.get(j));
         }
+    }
+
+    int count(List<Integer> integers, int n) {
+        int counter = 0;
+        for (int i = 0; i < integers.size(); i++) {
+            if (integers.get(i) == n)
+                counter++;
+        }
+        return counter;
     }
 
     public void pasNoua() {
