@@ -1,8 +1,9 @@
+import org.apache.commons.lang.time.StopWatch;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Random;
-import org.apache.commons.lang.time.*;
 
 /**
  * Created by Tudor on 21-Jan-17.
@@ -13,6 +14,12 @@ public class Main {
     @SuppressWarnings("deprecation")
     public static void main(String[] args) throws IOException {
         // Generating the keys
+        //testRsa();
+//        testPollard();
+        FractiiContinue fractiiContinue = new FractiiContinue(BigInteger.valueOf(10123));
+    }
+
+    private static void testPollard() throws IOException {
         Rsa rsa = new Rsa();
         System.out.printf("Using RSA with public key: (e, N) = (%d, %d)", rsa.getE(), rsa.getN());
         System.out.println();
@@ -39,8 +46,6 @@ public class Main {
         rsa.assignPrivateKey(d);
         byte[] decrypted = rsa.decrypt(encrypted);
         System.out.println("Decrypted String: " + new String(decrypted) + "\r\n");
-        //testRsa();
-        FractiiContinue fractiiContinue = new FractiiContinue(BigInteger.valueOf(10123));
     }
 
     private static void testRsa() throws IOException {

@@ -1,5 +1,12 @@
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.function.Function;
+
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.summingInt;
 
 /**
  * Toate calculele se fac modulo n, suma si produsul ind reduse
@@ -20,22 +27,22 @@ public class FractiiContinue {
     private int[] bi = new int[i];
     private int[] bi_2_mod_n = new int[i];
     private double[] xi = new double[i];
+    private List<Integer> B = new ArrayList<>(5);
 
     public FractiiContinue(BigInteger n) {
         this.n = n;
-        pasUnu(n);
+        pasUnu();
         pasDoi();
         pasTrei();
         pasPatru();
         pasCinci();
+        pasSase();
     }
 
     /**
      * Fie b_1 = 1, b0 = a0 = floor(sqrt(n)) si x0 = sqrt(n) - a0.
-     *
-     * @param n
      */
-    private void pasUnu(BigInteger n) {
+    private void pasUnu() {
         b_1 = BigInteger.ONE;
         double sqrt_n = Math.sqrt(n.doubleValue());
         b0 = a0 = BigInteger.valueOf((long) Math.floor(sqrt_n));
@@ -60,6 +67,7 @@ public class FractiiContinue {
      * Fie ai = 1/(xi-1). Avem xi = 1/(xi-1)-ai
      */
     private void pasTrei() {
+        System.out.println("----------------------------------------------------------------");
         System.out.print("i\t");
         for (int j = 0; j < i; j++) System.out.printf("%9d ", j);
         System.out.println();
@@ -105,5 +113,61 @@ public class FractiiContinue {
         }
         System.out.printf("bi2 mod n");
         for (int j = 0; j < i; j++) System.out.printf("%6d   ", bi_2_mod_n[j]);
+        System.out.println("\n----------------------------------------------------------------");
+    }
+
+    /**
+     * Alegem dintre nr de la pct 5, acele nr care se factorizeaza in valoare absoluta
+     * in numere prime mici.
+     * Se formeaza baza de factori B alcatuita din -1 si nr prime ce apar in mai mult
+     * decat un element bi^2 mod n sau care apar cu o putere para intr-un singur element
+     */
+    private void pasSase() {
+        B.add(-1);
+        List<List<Integer>> lists = new ArrayList<>();
+        for (int aBi_2_mod_n : bi_2_mod_n) {
+            List<Integer> factoriPrimi = primeFactors(aBi_2_mod_n);
+            System.out.printf("%d = %s\n", aBi_2_mod_n, factoriPrimi.toString());
+
+            if (isValid(factoriPrimi))
+                lists.add(factoriPrimi);
+        }
+        System.out.println("Number candidates");
+        for (List<Integer> list : lists) {
+            System.out.println(list.toString());
+        }
+        lists.stream()
+                .flatMap(Collection::stream)
+                .collect(groupingBy(Function.identity(), summingInt(value -> 1)))
+                .forEach((number, frequency) -> System.out.printf("(%d, %d)", number, frequency));
+    }
+
+    /**
+     * We check for small number in a list of prime numbers
+     * Check if the list has a number greater than 13. If so return false else true
+     * @param factoriPrimi
+     * @return
+     */
+    private boolean isValid(List<Integer> factoriPrimi) {
+        for (Integer integer : factoriPrimi) {
+            if (integer > 13)
+                return false;
+        }
+        return true;
+    }
+
+    public static List<Integer> primeFactors(int numbers) {
+        int n = numbers;
+        List<Integer> factors = new ArrayList<>();
+        for (int i = 2; i <= n / i; i++) {
+            while (n % i == 0) {
+                factors.add(i);
+                n /= i;
+            }
+        }
+        if (n > 1) {
+            factors.add(n);
+        }
+        return factors;
     }
 }
