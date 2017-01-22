@@ -28,6 +28,7 @@ public class FractiiContinue {
     private List<Integer> B;
     private List<List<Integer>> V = new ArrayList<>();
     private List<List<Integer>> VOut = new ArrayList<>();
+    private Map<Integer, Integer> indexes = new HashMap<>();
 
     public FractiiContinue(BigInteger n) {
         this(n, 5);
@@ -202,8 +203,6 @@ public class FractiiContinue {
         System.out.printf("B = %s\n", B.toString());
     }
 
-    Map<Object, Integer> indexes = new HashMap<>();
-
     /**
      * Calcul vectori asociati lui B
      */
@@ -241,6 +240,7 @@ public class FractiiContinue {
                     List<List<Integer>> potentialSolution = this.buildVectorList(solution);
                     if (this.vectorSumEqualZero(potentialSolution)) {
                         this.VOut = potentialSolution;
+                        this.removeUnusedBValues(solution);
                         System.out.println("Pas 9: vectorii a caror suma mod 2 da zero:");
                         for (int i = 0; i < solution.length; i++) {
                             if (solution[i]) {
@@ -270,6 +270,14 @@ public class FractiiContinue {
         } while (vectorIndex >= 0);
 
         return;
+    }
+
+    private void removeUnusedBValues(Boolean[] solution){
+        for (int i=0; i<solution.length; i++) {
+            if (!solution[i]){
+                this.indexes.remove(i);
+            }
+        }
     }
 
     private List<List<Integer>> buildVectorList(Boolean[] solution) {
@@ -324,7 +332,7 @@ public class FractiiContinue {
 
     private long calculateB() {
         long b = 1;
-        for (Map.Entry<Object, Integer> entry : indexes.entrySet()) {
+        for (Map.Entry<Integer, Integer> entry : indexes.entrySet()) {
             b *= entry.getValue();
         }
         b %= n.intValue();
