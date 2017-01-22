@@ -199,15 +199,16 @@ public class FractiiContinue {
         });
 
         B.addAll(keySet);
-        System.out.printf("B = %s", B.toString());
+        System.out.printf("B = %s\n", B.toString());
     }
 
     Map<Object, Integer> indexes = new HashMap<>();
 
+    /**
+     * Calcul vectori asociati lui B
+     */
     private void pasOpt() {
         System.out.println("--------------------------- PAS 8 --------------------------");
-        System.out.println();
-        System.out.println("Pas 8: calcul vectori asociati lui B");
         for (int j = 0; j < candidati.size(); j++) {
             List<Integer> integers = new ArrayList<>(i);
             List<Integer> candidatiJ = candidati.get(j);
