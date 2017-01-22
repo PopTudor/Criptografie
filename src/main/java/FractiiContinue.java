@@ -28,7 +28,7 @@ public class FractiiContinue {
     private List<Integer> B;
     private List<List<Integer>> V = new ArrayList<>();
     private List<List<Integer>> VOut = new ArrayList<>();
-    private Map<Integer, Integer> indexes = new HashMap<>();
+    private List<Integer> indexes = new ArrayList<Integer>();
 
     public FractiiContinue(BigInteger n) {
         this(n, 5);
@@ -154,7 +154,7 @@ public class FractiiContinue {
 
             if (isValid(factoriPrimi)) {
                 candidati.add(factoriPrimi);
-                indexes.put(j, bi[j]);
+                indexes.add(bi[j]);
             }
             j++;
         }
@@ -342,8 +342,8 @@ public class FractiiContinue {
 
     private long calculateB() {
         long b = 1;
-        for (Map.Entry<Integer, Integer> entry : indexes.entrySet()) {
-            b *= entry.getValue();
+        for (Integer entry : indexes) {
+            b *= entry;
         }
         b %= n.intValue();
         return b;
