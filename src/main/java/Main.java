@@ -16,7 +16,11 @@ public class Main {
         // Generating the keys
         //testRsa();
 //        testPollard();
+        StopWatch sw = new StopWatch();
+        sw.start();
         FractiiContinue fractiiContinue = new FractiiContinue(BigInteger.valueOf(10123),6);
+        sw.stop();
+        System.out.printf("\r\nContinued Fractions Factorization took %dms\r\n", sw.getTime());
     }
 
     private static void testPollard() throws IOException {
