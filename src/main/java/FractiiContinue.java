@@ -111,7 +111,7 @@ public class FractiiContinue {
             bi_2_mod_n[j] = BigInteger.valueOf(bi[j]).modPow(BigInteger.valueOf(2), n).intValue();
             if (bi_2_mod_n[j] > 1000) {
                 bi_2_mod_n[j] = n.intValue() % bi_2_mod_n[j];
-//                bi_2_mod_n[j] = bi_2_mod_n[j] * -1;
+                bi_2_mod_n[j] = bi_2_mod_n[j] * -1;
             }
         }
         System.out.printf("bi2 mod n");
@@ -171,7 +171,7 @@ public class FractiiContinue {
         numarFrecvente.forEach((number, frequency) -> {
             // adauga doar numerele care apar in cel putin doua elemente din bi^2 mod n sau
             // care apar cu o putere para intr-un singur element
-            if (frequency > 1 || Math.sqrt(number) == 0)
+            if (frequency > 1 && number > 0 || Math.sqrt(number) == 0)
                 keySet.add(number);
         });
 
@@ -199,16 +199,18 @@ public class FractiiContinue {
     }
 
     public static List<Integer> primeFactors(int numbers) {
-        int n = numbers;
+        int absNumbers = Math.abs(numbers);
         List<Integer> factors = new ArrayList<>();
-        for (int i = 2; i <= n / i; i++) {
-            while (n % i == 0) {
+        if (numbers < 0)
+            factors.add(-1);
+        for (int i = 2; i <= absNumbers / i; i++) {
+            while (absNumbers % i == 0) {
                 factors.add(i);
-                n /= i;
+                absNumbers /= i;
             }
         }
-        if (n > 1) {
-            factors.add(n);
+        if (absNumbers > 1) {
+            factors.add(absNumbers);
         }
         return factors;
     }
