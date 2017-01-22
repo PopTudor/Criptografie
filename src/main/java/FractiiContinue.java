@@ -50,7 +50,7 @@ public class FractiiContinue {
         pasSase();
         pasSapte();
         pasOpt();
-        pasNoua();
+//        pasNoua();
         pasZece();
         pasUnsprezece();
     }
@@ -59,10 +59,11 @@ public class FractiiContinue {
      * Fie b_1 = 1, b0 = a0 = floor(sqrt(n)) si x0 = sqrt(n) - a0.
      */
     private void pasUnu() {
+        System.out.println("--------------------------- PAS 1 --------------------------");
         b_1 = BigInteger.ONE;
         double sqrt_n = Math.sqrt(n.doubleValue());
         b0 = a0 = BigInteger.valueOf((long) Math.floor(sqrt_n));
-        x0 = BigDecimal.valueOf(sqrt_n).subtract(BigDecimal.valueOf(a0.doubleValue())).setScale(3, BigDecimal.ROUND_DOWN);
+        x0 = BigDecimal.valueOf(sqrt_n).subtract(BigDecimal.valueOf(a0.doubleValue()));
 
         System.out.println("a0 = b0 = " + a0);
         System.out.println("x0 = " + x0);
@@ -73,6 +74,7 @@ public class FractiiContinue {
      */
     private void pasDoi() {
 //        b0 = b0.modPow(BigInteger.valueOf(2), n);
+        System.out.println("--------------------------- PAS 2 --------------------------");
         System.out.println("b0^2 = " + b0);
         ai[0] = a0.intValue();
         bi[0] = b0.intValue();
@@ -83,7 +85,7 @@ public class FractiiContinue {
      * Fie ai = 1/(xi-1). Avem xi = 1/(xi-1)-ai
      */
     private void pasTrei() {
-        System.out.println("----------------------------------------------------------------");
+        System.out.println("--------------------------- PAS 3-4-5 --------------------------");
         System.out.print("i\t");
         for (int j = 0; j < i; j++) System.out.printf("%9d ", j);
         System.out.println();
@@ -131,7 +133,7 @@ public class FractiiContinue {
         }
         System.out.printf("bi2 mod n");
         for (int j = 0; j < i; j++) System.out.printf("%6d   ", bi_2_mod_n[j]);
-        System.out.println("\n----------------------------------------------------------------");
+        System.out.println();
     }
 
     /**
@@ -143,14 +145,15 @@ public class FractiiContinue {
     List<List<Integer>> candidati = new ArrayList<>();
 
     private void pasSase() {
-        int j=0;
+        System.out.println("--------------------------- PAS 6 --------------------------");
+        int j = 0;
         for (int aBi_2_mod_n : bi_2_mod_n) {
             List<Integer> factoriPrimi = primeFactors(aBi_2_mod_n);
             System.out.printf("%d = %s\n", aBi_2_mod_n, factoriPrimi.toString());
 
-            if (isValid(factoriPrimi)){
+            if (isValid(factoriPrimi)) {
                 candidati.add(factoriPrimi);
-                indexes.put(j,bi[j]);
+                indexes.put(j, bi[j]);
             }
             j++;
         }
@@ -181,6 +184,7 @@ public class FractiiContinue {
      * sau numerele care apar cu o putere para intr-un singur element
      */
     private void pasSapte() {
+        System.out.println("--------------------------- PAS 7 --------------------------");
         B.add(-1);
         Map<Integer, Integer> numarFrecvente = candidati.stream()
                 .flatMap(Collection::stream)
@@ -201,6 +205,7 @@ public class FractiiContinue {
     Map<Object, Integer> indexes = new HashMap<>();
 
     private void pasOpt() {
+        System.out.println("--------------------------- PAS 8 --------------------------");
         System.out.println();
         System.out.println("Pas 8: calcul vectori asociati lui B");
         for (int j = 0; j < candidati.size(); j++) {
@@ -220,6 +225,7 @@ public class FractiiContinue {
     }
 
     public void pasNoua() {
+        System.out.println("--------------------------- PAS 9 --------------------------");
         int vectorCount = this.V.get(0).size();
         Boolean solution[] = new Boolean[vectorCount];
         for (int i = 0; i < vectorCount; i++) {
@@ -307,7 +313,7 @@ public class FractiiContinue {
     long cResult;
 
     private void pasZece() {
-        System.out.println("Pas 10: se calculeaza b si c");
+        System.out.println("--------------------------- PAS 10 --------------------------");
         bResult = calculateB();
         cResult = calculateC();
         System.out.printf("b = %d\n", bResult);
@@ -315,17 +321,22 @@ public class FractiiContinue {
         System.out.println();
     }
 
-
-    int[] bi2 = {101, 201, 503, 1308};
-
     private long calculateB() {
-        int b = 1;
-        for (int j = 0; j < V.size(); j++) {
-            b *= bi2[j];
-//            b *= bi[indexes.get(V.get(j))];
-            b %= n.intValue();
+        long b = 1;
+        for (Map.Entry<Object, Integer> entry : indexes.entrySet()) {
+            b *= entry.getValue();
         }
+        b %= n.intValue();
         return b;
+    }
+
+    int findItem(int[] array, int item) {
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] == item) {
+                return array[i];
+            }
+        }
+        return 1;
     }
 
     private int multiplyArray(List<Integer> integers) {
@@ -337,6 +348,7 @@ public class FractiiContinue {
     }
 
     private void pasUnsprezece() {
+        System.out.println("--------------------------- PAS 11 --------------------------");
         if (bResult != Math.abs(cResult)) {
             System.out.println("b != +-c");
             BigInteger factorP = BigInteger.valueOf(bResult + cResult);
