@@ -125,7 +125,6 @@ public class FractiiContinue {
     List<List<Integer>> frecvente = new ArrayList<>();
 
     private void pasSase() {
-        B.add(-1);
         for (int aBi_2_mod_n : bi_2_mod_n) {
             List<Integer> factoriPrimi = primeFactors(aBi_2_mod_n);
             System.out.printf("%d = %s\n", aBi_2_mod_n, factoriPrimi.toString());
@@ -155,6 +154,8 @@ public class FractiiContinue {
     }
 
     private void pasSapte() {
+        B.add(-1);
+
         frecvente.stream()
                 .flatMap(Collection::stream)
                 .collect(groupingBy(Function.identity(), summingInt(value -> 1)))
