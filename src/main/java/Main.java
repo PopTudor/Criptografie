@@ -15,15 +15,15 @@ public class Main {
     public static void main(String[] args) throws IOException {
         // Generating the keys
         //testRsa();
-//        testPollard();
+        long n = testPollard();
         StopWatch sw = new StopWatch();
         sw.start();
-        FractiiContinue fractiiContinue = new FractiiContinue(BigInteger.valueOf(10123));
+        FractiiContinue fractiiContinue = new FractiiContinue(BigInteger.valueOf(n));
         sw.stop();
         System.out.printf("\r\nContinued Fractions Factorization took %dms\r\n", sw.getTime());
     }
 
-    private static void testPollard() throws IOException {
+    private static long testPollard() throws IOException {
         Rsa rsa = new Rsa();
         System.out.printf("Using RSA with public key: (e, N) = (%d, %d)", rsa.getE(), rsa.getN());
         System.out.println();
@@ -50,6 +50,7 @@ public class Main {
         rsa.assignPrivateKey(d);
         byte[] decrypted = rsa.decrypt(encrypted);
         System.out.println("Decrypted String: " + new String(decrypted) + "\r\n");
+        return rsa.getN();
     }
 
     private static void testRsa() throws IOException {

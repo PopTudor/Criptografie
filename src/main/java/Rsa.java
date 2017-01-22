@@ -12,7 +12,7 @@ public class Rsa {
     private BigInteger phi;
     private BigInteger e;
     private BigInteger d;
-    private int bitlength = 24;
+    private int bitlength = 11;
     private Random r;
 
     public Rsa() {
