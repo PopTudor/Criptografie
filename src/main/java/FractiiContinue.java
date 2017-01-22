@@ -26,6 +26,7 @@ public class FractiiContinue {
     private int[] bi_2_mod_n = new int[i];
     private double[] xi = new double[i];
     private List<Integer> B = new ArrayList<>(5);
+    private List<List<Integer>> V = new ArrayList<>();
 
     public FractiiContinue(BigInteger n) {
         this.n = n;
