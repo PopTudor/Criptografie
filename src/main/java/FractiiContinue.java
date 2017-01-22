@@ -41,6 +41,7 @@ public class FractiiContinue {
         pasOpt();
 //        pasNoua();
         pasZece();
+        pasUnsprezece();
     }
 
     /**
@@ -276,6 +277,9 @@ public class FractiiContinue {
         System.out.println("Pas 10: se calculeaza b si c");
         bResult = calculateB();
         cResult = calculateC();
+        System.out.printf("b = %d\n", bResult);
+        System.out.printf("c = %d\n", cResult);
+        System.out.println();
     }
 
 
@@ -288,6 +292,16 @@ public class FractiiContinue {
             b %= n.intValue();
         }
         return b;
+    }
+
+    private void pasUnsprezece() {
+        if (bResult != Math.abs(cResult)) {
+            System.out.println("b != +-c");
+            BigInteger factorP = BigInteger.valueOf(bResult + cResult);
+            BigInteger factorQ = BigInteger.valueOf(bResult - cResult);
+            System.out.printf("primul factor al lui n (b+c,n): %d\n", factorP.gcd(n));
+            System.out.printf("al doilea factor a lui n (b-c,n): %d\n", factorQ.gcd(n));
+        }
     }
 
     private long calculateC() {
