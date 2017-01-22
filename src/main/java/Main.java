@@ -16,7 +16,8 @@ public class Main {
         // Generating the keys
         //testRsa();
 //        testPollard();
-        FractiiContinue fractiiContinue = new FractiiContinue(BigInteger.valueOf(10123));
+        //FractiiContinue fractiiContinue = new FractiiContinue(BigInteger.valueOf(10123));
+        FractiiContinue.pasNoua();
     }
 
     private static void testPollard() throws IOException {

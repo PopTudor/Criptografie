@@ -27,6 +27,7 @@ public class FractiiContinue {
     private double[] xi = new double[i];
     private List<Integer> B = new ArrayList<>(5);
     private List<List<Integer>> V = new ArrayList<>();
+    private List<List<Integer>> VOut = new ArrayList<>();
 
     public FractiiContinue(BigInteger n) {
         this.n = n;
@@ -38,6 +39,7 @@ public class FractiiContinue {
         pasSase();
         pasSapte();
         pasOpt();
+        pasNoua();
     }
 
     /**
@@ -196,6 +198,70 @@ public class FractiiContinue {
         for (int j = 0; j < V.size(); j++) {
             System.out.printf("v%d = %s\n", j, V.get(j));
         }
+    }
+
+    public void pasNoua() {
+        int vectorCount = this.V.get(0).size();
+        Boolean solution[] = new Boolean[vectorCount];
+        for (int i = 0; i < vectorCount; i++){
+            solution[i] = false;
+        }
+
+        int vectorIndex = -1;
+        Boolean solRequest = true;
+        do {
+            if (solRequest) {
+                if (vectorIndex == vectorCount) {
+                    List<List<Integer>> potentialSolution = this.buildVectorList(solution);
+                    if (this.vectorSumEqualZero(potentialSolution)) {
+                        this.VOut = potentialSolution;
+                        return;
+                    }
+
+                    solRequest = false;
+                } else {
+                    vectorIndex++;
+                }
+            } else {
+                if (vectorIndex <= 0) {
+                    break;
+                }
+                vectorIndex--;
+                if (!solution[vectorIndex]){
+                    solution[vectorIndex] = true;
+                    solRequest = true;
+                } else {
+                    solution[vectorIndex] = false;
+                }
+            }
+        } while (vectorIndex >= 0);
+
+        return;
+    }
+
+    private List<List<Integer>> buildVectorList(Boolean[] solution){
+        List<List<Integer>> sol = new ArrayList<>();
+        for (int i = 0; i < solution.length; i++) {
+            if (solution[i]) {
+                sol.add(i, this.V.get(i));
+            }
+        }
+        return sol;
+    }
+
+    private Boolean vectorSumEqualZero(List<List<Integer>> vList) {
+        for (int i = 0; i < vList.get(0).size(); i++) {
+            int sum = 0;
+            for (int j = 0; j < vList.size(); j++) {
+                sum += vList.get(j).get(i);
+            }
+
+            if (sum % 2 != 0) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public static List<Integer> primeFactors(int numbers) {
