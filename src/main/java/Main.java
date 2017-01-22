@@ -18,7 +18,7 @@ public class Main {
 //        testPollard();
         StopWatch sw = new StopWatch();
         sw.start();
-        FractiiContinue fractiiContinue = new FractiiContinue(BigInteger.valueOf(17873),6);
+        FractiiContinue fractiiContinue = new FractiiContinue(BigInteger.valueOf(10123));
         sw.stop();
         System.out.printf("\r\nContinued Fractions Factorization took %dms\r\n", sw.getTime());
     }

@@ -26,34 +26,42 @@ public class FractiiContinue {
     private int[] bi_2_mod_n;
     private double[] xi;
     private List<Integer> B;
-    private List<List<Integer>> V = new ArrayList<>();
-    private List<List<Integer>> VOut = new ArrayList<>();
-    private List<Integer> indexes = new ArrayList<Integer>();
+    private List<List<Integer>> V;
+    private List<List<Integer>> VOut;
+    private List<Integer> indexes;
 
     public FractiiContinue(BigInteger n) {
         this(n, 5);
     }
 
     public FractiiContinue(BigInteger n, int i) {
-        this.n = n;
-        this.i = i;
-        ai = new int[i];
-        bi = new int[i];
-        bi_2_mod_n = new int[i];
-        xi = new double[i];
-        B = new ArrayList<>(i);
+        Boolean found = false;
+        do {
+            this.n = n;
+            this.i = i;
+            ai = new int[i];
+            bi = new int[i];
+            bi_2_mod_n = new int[i];
+            xi = new double[i];
+            B = new ArrayList<>(i);
+            V = new ArrayList<>();
+            VOut = new ArrayList<>();
+            indexes = new ArrayList<>();
+            candidati = new ArrayList<>();
 
-        pasUnu();
-        pasDoi();
-        pasTrei();
-        pasPatru();
-        pasCinci();
-        pasSase();
-        pasSapte();
-        pasOpt();
-        pasNoua();
-        pasZece();
-        pasUnsprezece();
+            pasUnu();
+            pasDoi();
+            pasTrei();
+            pasPatru();
+            pasCinci();
+            pasSase();
+            pasSapte();
+            pasOpt();
+            pasNoua();
+            pasZece();
+            found = pasUnsprezeceGasit();
+            i += 3;
+        } while (!found);
     }
 
     /**
@@ -143,7 +151,7 @@ public class FractiiContinue {
      * Se formeaza baza de factori B alcatuita din -1 si nr prime ce apar in mai mult
      * decat un element bi^2 mod n sau care apar cu o putere para intr-un singur element
      */
-    List<List<Integer>> candidati = new ArrayList<>();
+    List<List<Integer>> candidati;
 
     private void pasSase() {
         System.out.println("--------------------------- PAS 6 --------------------------");
@@ -152,10 +160,10 @@ public class FractiiContinue {
             List<Integer> factoriPrimi = primeFactors(aBi_2_mod_n);
             System.out.printf("%d = %s\n", aBi_2_mod_n, factoriPrimi.toString());
 
-            if (isValid(factoriPrimi)) {
+            //if (isValid(factoriPrimi)) {
                 candidati.add(factoriPrimi);
                 indexes.add(bi[j]);
-            }
+            //}
             j++;
         }
         System.out.println("Number candidates");
@@ -208,7 +216,7 @@ public class FractiiContinue {
      */
     private void pasOpt() {
         System.out.println("--------------------------- PAS 8 --------------------------");
-        for (int j = 0; j < candidati.size(); j++) {
+        for (int j = 0; j< candidati.size(); j++) {
             List<Integer> integers = new ArrayList<>(i);
             List<Integer> candidatiJ = candidati.get(j);
 
@@ -218,6 +226,7 @@ public class FractiiContinue {
                     integers.set(k, count(candidatiJ, B.get(k)));
                 }
             }
+
             V.add(integers);
         }
         for (int j = 0; j < V.size(); j++) {
@@ -248,7 +257,7 @@ public class FractiiContinue {
             if (solRequest) {
                 if (vectorIndex == vectorCount) {
                     List<List<Integer>> potentialSolution = this.buildVectorList(solution);
-                    if (this.vectorSumEqualZero(potentialSolution)) {
+                    if (potentialSolution != null && this.vectorSumEqualZero(potentialSolution)) {
                         this.VOut = potentialSolution;
                         this.removeUnusedBValues(solution);
                         System.out.println("Pas 9: vectorii a caror suma mod 2 da zero:");
@@ -283,9 +292,9 @@ public class FractiiContinue {
     }
 
     private void removeUnusedBValues(Boolean[] solution){
-        for (int i=0; i<solution.length; i++) {
+        for (int i=solution.length-1; i>=0; i--) {
             if (!solution[i]){
-                this.indexes.remove(i);
+                this.indexes.set(i, 1);
             }
         }
     }
@@ -300,10 +309,27 @@ public class FractiiContinue {
         List<List<Integer>> sol = new ArrayList<>(solLength);
         for (int i = 0; i < solution.length; i++) {
             if (solution[i]) {
+                if (isArrayZero(this.V.get(i))) {
+                    this.indexes.set(i, 1);
+                    return null;
+                }
+
                 sol.add(this.V.get(i));
             }
         }
         return sol;
+    }
+
+    private Boolean isArrayZero(List<Integer> array){
+        int sum=0;
+        for (int i=0; i<array.size(); i++){
+            sum += array.get(i);
+        }
+
+        if (sum == 0){
+            return true;
+        }
+        return false;
     }
 
     private Boolean vectorSumEqualZero(List<List<Integer>> vList) {
@@ -335,7 +361,7 @@ public class FractiiContinue {
         System.out.println("--------------------------- PAS 10 --------------------------");
         bResult = calculateB();
         cResult = calculateC();
-        System.out.printf("b = %d\n", bResult);
+        System.out.printf("b = %s* = %d\n", indexes.toString(), bResult);
         System.out.printf("c = %d\n", cResult);
         System.out.println();
     }
@@ -366,14 +392,22 @@ public class FractiiContinue {
         return result;
     }
 
-    private void pasUnsprezece() {
+    private Boolean pasUnsprezeceGasit() {
         System.out.println("--------------------------- PAS 11 --------------------------");
         if (bResult != Math.abs(cResult)) {
             System.out.println("b != +-c");
             BigInteger factorP = BigInteger.valueOf(bResult + cResult);
+            long pGcd = factorP.gcd(n).longValue();
             BigInteger factorQ = BigInteger.valueOf(bResult - cResult);
-            System.out.printf("primul factor al lui n (b+c,n): %d\n", factorP.gcd(n));
-            System.out.printf("al doilea factor a lui n (b-c,n): %d\n", factorQ.gcd(n));
+            long qGcd = factorQ.gcd(n).longValue();
+            System.out.printf("primul factor al lui n (b+c,n): %d\n", pGcd);
+            System.out.printf("al doilea factor a lui n (b-c,n): %d\n", qGcd);
+            if (qGcd == 1 || qGcd == 1) {
+                return false;
+            }
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -381,7 +415,7 @@ public class FractiiContinue {
         int c = 1;
         for (int j = 1; j < B.size(); j++) {
             int bval = B.get(j);
-            int power = powDivTwo(V, j);
+            int power = powDivTwo(VOut, j);
             c *= Math.pow(bval, power);
         }
         c %= n.intValue();
