@@ -122,7 +122,7 @@ public class FractiiContinue {
      * Se formeaza baza de factori B alcatuita din -1 si nr prime ce apar in mai mult
      * decat un element bi^2 mod n sau care apar cu o putere para intr-un singur element
      */
-    List<List<Integer>> frecvente = new ArrayList<>();
+    List<List<Integer>> candidati = new ArrayList<>();
 
     private void pasSase() {
         for (int aBi_2_mod_n : bi_2_mod_n) {
@@ -130,10 +130,10 @@ public class FractiiContinue {
             System.out.printf("%d = %s\n", aBi_2_mod_n, factoriPrimi.toString());
 
             if (isValid(factoriPrimi))
-                frecvente.add(factoriPrimi);
+                candidati.add(factoriPrimi);
         }
         System.out.println("Number candidates");
-        for (List<Integer> list : frecvente) {
+        for (List<Integer> list : candidati) {
             System.out.println(list.toString());
         }
     }
@@ -156,7 +156,7 @@ public class FractiiContinue {
     private void pasSapte() {
         B.add(-1);
 
-        frecvente.stream()
+        candidati.stream()
                 .flatMap(Collection::stream)
                 .collect(groupingBy(Function.identity(), summingInt(value -> 1)))
                 .forEach((number, frequency) -> System.out.printf("(%d, %d)", number, frequency));
