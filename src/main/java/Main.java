@@ -12,8 +12,34 @@ public class Main {
 
     @SuppressWarnings("deprecation")
     public static void main(String[] args) throws IOException {
-        testRsa();
-        //StopWatch
+        // Generating the keys
+        Rsa rsa = new Rsa();
+        System.out.printf("Using RSA with public key: (e, N) = (%d, %d)", rsa.getE(), rsa.getN());
+        System.out.println();
+
+        String teststring;
+        System.out.println("Enter the plain text to encrypt:");
+        DataInputStream in = new DataInputStream(System.in);
+        teststring = in.readLine();
+        System.out.println("Encrypting String: " + teststring);
+        byte[] encrypted = rsa.encrypt(teststring.getBytes());
+
+        PollardRho pr = new PollardRho(rsa.getN());
+        StopWatch sw = new StopWatch();
+        sw.start();
+        long p = pr.factorize();
+        sw.stop();
+        System.out.printf("\r\nPollard Rho Factorization took %dms\r\n", sw.getTime());
+        long q = rsa.getN() / p;
+        long phi = (p-1)*(q-1);
+
+        BigInteger d = BigInteger.valueOf(rsa.getE()).modInverse(BigInteger.valueOf(phi));
+        System.out.printf("Pollard found p=%d; q=%d => phi=%d and finally d=%d\r\n\r\n", p, q, phi, d.longValue());
+
+        rsa.assignPrivateKey(d);
+        byte[] decrypted = rsa.decrypt(encrypted);
+        System.out.println("Decrypted String: " + new String(decrypted) + "\r\n");
+        //testRsa();
         FractiiContinue fractiiContinue = new FractiiContinue(BigInteger.valueOf(10123));
     }
 
@@ -38,13 +64,13 @@ public class Main {
         System.out.println("Enter the plain text:");
         teststring = in.readLine();
         System.out.println("Encrypting String: " + teststring);
-        System.out.println("String in Bytes: " + bytesToString(teststring.getBytes()));
+        //System.out.println("String in Bytes: " + bytesToString(teststring.getBytes()));
         // encrypt
         byte[] encrypted = rsa.encrypt(teststring.getBytes());
-        System.out.println("Encrypted in string: " + bytesToString(encrypted));
+        //System.out.println("Encrypted in string: " + bytesToString(encrypted));
         // decrypt
         byte[] decrypted = rsa.decrypt(encrypted);
-        System.out.println("Decrypting Bytes: " + bytesToString(decrypted));
+        //System.out.println("Decrypting Bytes: " + bytesToString(decrypted));
         System.out.println("Decrypted String: " + new String(decrypted));
     }
 

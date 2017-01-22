@@ -12,7 +12,7 @@ public class Rsa {
     private BigInteger phi;
     private BigInteger e;
     private BigInteger d;
-    private int bitlength = 1024;
+    private int bitlength = 24;
     private Random r;
 
     public Rsa() {
@@ -28,13 +28,23 @@ public class Rsa {
         d = e.modInverse(phi);
     }
 
+    public long getN(){
+        return this.N.longValue();
+    }
+
+    public long getE(){
+        return this.e.longValue();
+    }
+
     public Rsa(BigInteger e, BigInteger d, BigInteger N) {
         this.e = e;
         this.d = d;
         this.N = N;
     }
 
-
+    public void assignPrivateKey(BigInteger pk) {
+        this.d = pk;
+    }
 
     // Encrypt message
     public byte[] encrypt(byte[] message) {
