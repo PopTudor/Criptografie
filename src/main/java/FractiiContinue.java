@@ -20,17 +20,28 @@ public class FractiiContinue {
     private BigDecimal x0;
     private BigInteger n;
 
-    private int i = 6;
-    private int[] ai = new int[i];
-    private int[] bi = new int[i];
-    private int[] bi_2_mod_n = new int[i];
-    private double[] xi = new double[i];
-    private List<Integer> B = new ArrayList<>(5);
+    private int i;
+    private int[] ai;
+    private int[] bi;
+    private int[] bi_2_mod_n;
+    private double[] xi;
+    private List<Integer> B;
     private List<List<Integer>> V = new ArrayList<>();
     private List<List<Integer>> VOut = new ArrayList<>();
 
     public FractiiContinue(BigInteger n) {
+        this(n, 5);
+    }
+
+    public FractiiContinue(BigInteger n, int i) {
         this.n = n;
+        this.i = i;
+        ai = new int[i];
+        bi = new int[i];
+        bi_2_mod_n = new int[i];
+        xi = new double[i];
+        B = new ArrayList<>(i);
+
         pasUnu();
         pasDoi();
         pasTrei();
@@ -39,7 +50,7 @@ public class FractiiContinue {
         pasSase();
         pasSapte();
         pasOpt();
-//        pasNoua();
+        pasNoua();
         pasZece();
         pasUnsprezece();
     }
@@ -132,12 +143,16 @@ public class FractiiContinue {
     List<List<Integer>> candidati = new ArrayList<>();
 
     private void pasSase() {
+        int j=0;
         for (int aBi_2_mod_n : bi_2_mod_n) {
             List<Integer> factoriPrimi = primeFactors(aBi_2_mod_n);
             System.out.printf("%d = %s\n", aBi_2_mod_n, factoriPrimi.toString());
 
-            if (isValid(factoriPrimi))
+            if (isValid(factoriPrimi)){
                 candidati.add(factoriPrimi);
+                indexes.put(j,bi[j]);
+            }
+            j++;
         }
         System.out.println("Number candidates");
         for (List<Integer> list : candidati) {
@@ -183,6 +198,8 @@ public class FractiiContinue {
         System.out.printf("B = %s", B.toString());
     }
 
+    Map<Object, Integer> indexes = new HashMap<>();
+
     private void pasOpt() {
         System.out.println();
         System.out.println("Pas 8: calcul vectori asociati lui B");
@@ -217,6 +234,13 @@ public class FractiiContinue {
                     List<List<Integer>> potentialSolution = this.buildVectorList(solution);
                     if (this.vectorSumEqualZero(potentialSolution)) {
                         this.VOut = potentialSolution;
+                        System.out.println("Pas 9: vectorii a caror suma mod 2 da zero:");
+                        for (int i = 0; i < solution.length; i++) {
+                            if (solution[i]) {
+                                System.out.printf("v%d ", i);
+                            }
+                        }
+                        System.out.print(" mod 2 = (0)\r\n");
                         return;
                     }
 
@@ -242,16 +266,25 @@ public class FractiiContinue {
     }
 
     private List<List<Integer>> buildVectorList(Boolean[] solution) {
-        List<List<Integer>> sol = new ArrayList<>();
+        int solLength = 0;
         for (int i = 0; i < solution.length; i++) {
             if (solution[i]) {
-                sol.add(i, this.V.get(i));
+                solLength++;
+            }
+        }
+        List<List<Integer>> sol = new ArrayList<>(solLength);
+        for (int i = 0; i < solution.length; i++) {
+            if (solution[i]) {
+                sol.add(this.V.get(i));
             }
         }
         return sol;
     }
 
     private Boolean vectorSumEqualZero(List<List<Integer>> vList) {
+        if (vList == null || vList.size() == 0) {
+            return false;
+        }
         for (int i = 0; i < vList.get(0).size(); i++) {
             int sum = 0;
             for (int j = 0; j < vList.size(); j++) {
@@ -289,9 +322,18 @@ public class FractiiContinue {
         int b = 1;
         for (int j = 0; j < V.size(); j++) {
             b *= bi2[j];
+//            b *= bi[indexes.get(V.get(j))];
             b %= n.intValue();
         }
         return b;
+    }
+
+    private int multiplyArray(List<Integer> integers) {
+        int result = 1;
+        for (Integer integer : integers) {
+            result *= integer;
+        }
+        return result;
     }
 
     private void pasUnsprezece() {
