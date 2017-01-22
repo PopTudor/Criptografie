@@ -37,6 +37,7 @@ public class FractiiContinue {
         pasCinci();
         pasSase();
         pasSapte();
+        pasOpt();
     }
 
     /**
@@ -108,8 +109,10 @@ public class FractiiContinue {
     private void pasCinci() {
         for (int j = 0; j < i; j++) {
             bi_2_mod_n[j] = BigInteger.valueOf(bi[j]).modPow(BigInteger.valueOf(2), n).intValue();
-            if (bi_2_mod_n[j] > 1000)
+            if (bi_2_mod_n[j] > 1000) {
                 bi_2_mod_n[j] = n.intValue() % bi_2_mod_n[j];
+//                bi_2_mod_n[j] = bi_2_mod_n[j] * -1;
+            }
         }
         System.out.printf("bi2 mod n");
         for (int j = 0; j < i; j++) System.out.printf("%6d   ", bi_2_mod_n[j]);
@@ -137,6 +140,7 @@ public class FractiiContinue {
             System.out.println(list.toString());
         }
     }
+
 
     /**
      * We check for small number in a list of prime numbers
@@ -173,6 +177,25 @@ public class FractiiContinue {
 
         B.addAll(keySet);
         System.out.printf("B = %s", B.toString());
+    }
+
+    private void pasOpt() {
+        System.out.println();
+        System.out.println("Pas 8: calcul vectori asociati lui B");
+        for (int j = 0; j < candidati.size(); j++) {
+            List<Integer> integers = new ArrayList<>(i);
+            List<Integer> candidatiJ = candidati.get(j);
+
+            for (int k = 0; k < i; k++) {
+                integers.add(0);
+                if (candidatiJ.contains(B.get(k)))
+                    integers.set(k, 1);
+            }
+            V.add(integers);
+        }
+        for (int j = 0; j < V.size(); j++) {
+            System.out.printf("v%d = %s\n", j, V.get(j));
+        }
     }
 
     public static List<Integer> primeFactors(int numbers) {
