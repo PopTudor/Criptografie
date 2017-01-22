@@ -39,7 +39,8 @@ public class FractiiContinue {
         pasSase();
         pasSapte();
         pasOpt();
-        pasNoua();
+//        pasNoua();
+        pasZece();
     }
 
     /**
@@ -203,7 +204,7 @@ public class FractiiContinue {
     public void pasNoua() {
         int vectorCount = this.V.get(0).size();
         Boolean solution[] = new Boolean[vectorCount];
-        for (int i = 0; i < vectorCount; i++){
+        for (int i = 0; i < vectorCount; i++) {
             solution[i] = false;
         }
 
@@ -227,7 +228,7 @@ public class FractiiContinue {
                     break;
                 }
                 vectorIndex--;
-                if (!solution[vectorIndex]){
+                if (!solution[vectorIndex]) {
                     solution[vectorIndex] = true;
                     solRequest = true;
                 } else {
@@ -239,7 +240,7 @@ public class FractiiContinue {
         return;
     }
 
-    private List<List<Integer>> buildVectorList(Boolean[] solution){
+    private List<List<Integer>> buildVectorList(Boolean[] solution) {
         List<List<Integer>> sol = new ArrayList<>();
         for (int i = 0; i < solution.length; i++) {
             if (solution[i]) {
@@ -262,6 +263,52 @@ public class FractiiContinue {
         }
 
         return true;
+    }
+
+    /**
+     * Se calculeaza b(mod n) = b1*b2*b3*b4*b5.
+     * Inmultirea se face fara -1
+     */
+    long bResult;
+    long cResult;
+
+    private void pasZece() {
+        System.out.println("Pas 10: se calculeaza b si c");
+        bResult = calculateB();
+        cResult = calculateC();
+    }
+
+
+    int[] bi2 = {101, 201, 503, 1308};
+
+    private long calculateB() {
+        int b = 1;
+        for (int j = 0; j < V.size(); j++) {
+            b *= bi2[j];
+            b %= n.intValue();
+        }
+        return b;
+    }
+
+    private long calculateC() {
+        int c = 1;
+        for (int j = 1; j < B.size(); j++) {
+            int bval = B.get(j);
+            int power = powDivTwo(V, j);
+            c *= Math.pow(bval, power);
+        }
+        c %= n.intValue();
+        return c;
+    }
+
+    private int powDivTwo(List<List<Integer>> vList, int whichVector) {
+        int power = 0;
+        for (List<Integer> vi : vList) {
+            int value = vi.get(whichVector);
+            power += value;
+        }
+        power /= 2;
+        return power;
     }
 
     public static List<Integer> primeFactors(int numbers) {
