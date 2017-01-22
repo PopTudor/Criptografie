@@ -1,8 +1,6 @@
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -37,6 +35,7 @@ public class FractiiContinue {
         pasPatru();
         pasCinci();
         pasSase();
+        pasSapte();
     }
 
     /**
@@ -153,13 +152,26 @@ public class FractiiContinue {
         return true;
     }
 
+    /**
+     * Pastreaza numerele candidate ce apar o singura data in numerele candidate
+     * sau numerele care apar cu o putere para intr-un singur element
+     */
     private void pasSapte() {
         B.add(-1);
-
-        candidati.stream()
+        Map<Integer, Integer> numarFrecvente = candidati.stream()
                 .flatMap(Collection::stream)
-                .collect(groupingBy(Function.identity(), summingInt(value -> 1)))
-                .forEach((number, frequency) -> System.out.printf("(%d, %d)", number, frequency));
+                .collect(groupingBy(Function.identity(), summingInt(value -> 1)));
+
+        Collection<Integer> keySet = new ArrayList<>();
+        numarFrecvente.forEach((number, frequency) -> {
+            // adauga doar numerele care apar in cel putin doua elemente din bi^2 mod n sau
+            // care apar cu o putere para intr-un singur element
+            if (frequency > 1 || Math.sqrt(number) == 0)
+                keySet.add(number);
+        });
+
+        B.addAll(keySet);
+        System.out.printf("B = %s", B.toString());
     }
 
     public static List<Integer> primeFactors(int numbers) {
