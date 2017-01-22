@@ -50,7 +50,7 @@ public class FractiiContinue {
         pasSase();
         pasSapte();
         pasOpt();
-//        pasNoua();
+        pasNoua();
         pasZece();
         pasUnsprezece();
     }
@@ -227,7 +227,7 @@ public class FractiiContinue {
 
     public void pasNoua() {
         System.out.println("--------------------------- PAS 9 --------------------------");
-        int vectorCount = this.V.get(0).size();
+        int vectorCount = this.V.size();
         Boolean solution[] = new Boolean[vectorCount];
         for (int i = 0; i < vectorCount; i++) {
             solution[i] = false;
