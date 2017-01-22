@@ -122,29 +122,27 @@ public class FractiiContinue {
      * Se formeaza baza de factori B alcatuita din -1 si nr prime ce apar in mai mult
      * decat un element bi^2 mod n sau care apar cu o putere para intr-un singur element
      */
+    List<List<Integer>> frecvente = new ArrayList<>();
+
     private void pasSase() {
         B.add(-1);
-        List<List<Integer>> lists = new ArrayList<>();
         for (int aBi_2_mod_n : bi_2_mod_n) {
             List<Integer> factoriPrimi = primeFactors(aBi_2_mod_n);
             System.out.printf("%d = %s\n", aBi_2_mod_n, factoriPrimi.toString());
 
             if (isValid(factoriPrimi))
-                lists.add(factoriPrimi);
+                frecvente.add(factoriPrimi);
         }
         System.out.println("Number candidates");
-        for (List<Integer> list : lists) {
+        for (List<Integer> list : frecvente) {
             System.out.println(list.toString());
         }
-        lists.stream()
-                .flatMap(Collection::stream)
-                .collect(groupingBy(Function.identity(), summingInt(value -> 1)))
-                .forEach((number, frequency) -> System.out.printf("(%d, %d)", number, frequency));
     }
 
     /**
      * We check for small number in a list of prime numbers
      * Check if the list has a number greater than 13. If so return false else true
+     *
      * @param factoriPrimi
      * @return
      */
@@ -154,6 +152,13 @@ public class FractiiContinue {
                 return false;
         }
         return true;
+    }
+
+    private void pasSapte() {
+        frecvente.stream()
+                .flatMap(Collection::stream)
+                .collect(groupingBy(Function.identity(), summingInt(value -> 1)))
+                .forEach((number, frequency) -> System.out.printf("(%d, %d)", number, frequency));
     }
 
     public static List<Integer> primeFactors(int numbers) {
